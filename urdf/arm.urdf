@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<!-- http://wiki.ros.org/urdf/XML/link -->
+<robot name="arm6_joint">
+  
+</robot>
