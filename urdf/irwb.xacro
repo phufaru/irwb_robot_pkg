@@ -5,11 +5,16 @@
 <!-- Feb 2025                                    -->
 <!-- ########################################### -->
 <robot name="runway_bot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:include filename="$(find irwb_robot_pkg)/urdf/arm.xacro"/>
   
   <!-- Body dimensions -->
   <xacro:property name="body_link_x_dim" value="2"/>
   <xacro:property name="body_link_y_dim" value="1"/>
   <xacro:property name="body_link_z_dim" value="0.7"/>
+  <xacro:property name="body_inner_x" value="0.8"/>
+  <xacro:property name="body_inner_y" value="0.8"/>
+  <xacro:property name="body_inner_z" value="0.6"/>
   
   <!-- Wheel dimensions -->
   <xacro:property name="wheel_link_radius" value="0.2"/>
@@ -18,7 +23,7 @@
   
   <!-- Material density -->
   <xacro:property name="body_density" value="2710"/>
-  <xacro:property name="wheel_density" value="2710"/>
+  <xacro:property name="wheel_density" value="1500"/>
   
   <!-- Pi const -->
   <xacro:property name="pi_const" value="3.141592652589"/>
@@ -56,19 +61,92 @@
     <child link="body_link"/>
   </joint>
   
-  <!--### Body link of iRWB ###-->
+  <!--####################################-->
+  <!--# body_link with hole in the front #-->
+  <!--####################################-->
+  
   <link name="body_link">
     <visual>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <origin rpy="0 0 0" xyz="${-1 * body_link_x_dim / 4} 0 0"/>
       <geometry>
-        <box size="${body_link_x_dim} ${body_link_y_dim} ${body_link_z_dim}"/>
+        <box size="${body_link_x_dim / 2} ${body_link_y_dim} ${body_link_z_dim}"/>       <!-- Solid back part -->
+      </geometry>
+    </visual>
+    
+    <visual>
+      <origin rpy="0 0 0" xyz="${(body_link_x_dim/2 - body_inner_x)/4.0} 0 0"/>       <!-- Shaded area 1 -->
+      <geometry>
+        <box size="0.1 ${body_inner_y} ${body_link_z_dim}"/>
+      </geometry>
+    </visual>
+    
+    <visual>
+      <origin rpy="0 0 0" xyz="${(body_link_x_dim/2 - body_inner_x)/4 + 0.9} 0 0"/>  <!-- Shaded area 2 -->
+      <geometry>
+        <box size="0.1 ${body_inner_y} ${body_link_z_dim}"/>
+      </geometry>
+    </visual>
+    
+    <visual>
+      <origin rpy="0 0 0" xyz="${body_link_x_dim / 4} ${(body_link_y_dim - 0.1)/ 2} 0"/>  <!-- Unshaded area 1 -->
+      <geometry>
+        <box size="${body_inner_x + 0.2} 0.1 ${body_link_z_dim}"/>
+      </geometry>
+    </visual>
+    
+    <visual>
+      <origin rpy="0 0 0" xyz="${body_link_x_dim / 4} ${-1 * (body_link_y_dim - 0.1)/ 2} 0"/> <!-- Unshaded area 2 -->
+      <geometry>
+        <box size="${body_inner_x + 0.2} 0.1 ${body_link_z_dim}"/>
+      </geometry>
+    </visual>
+
+    <visual>
+      <origin rpy="0 0 0" xyz="${body_link_x_dim / 4} 0 ${-1 * (body_link_z_dim - 0.1)/2}"/> <!-- Base of hole -->
+      <geometry>
+        <box size="${body_inner_x} ${body_inner_y} 0.1"/>
       </geometry>
     </visual>
     
     <collision>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <origin rpy="0 0 0" xyz="${-1 * body_link_x_dim / 4} 0 0"/>
       <geometry>
-        <box size="${body_link_x_dim} ${body_link_y_dim} ${body_link_z_dim}"/>
+        <box size="${body_link_x_dim / 2} ${body_link_y_dim} ${body_link_z_dim}"/>      
+      </geometry>
+    </collision>
+
+    <collision>
+      <origin rpy="0 0 0" xyz="${(body_link_x_dim/2 - body_inner_x)/4.0} 0 0"/>       
+      <geometry>
+        <box size="0.1 ${body_inner_y} ${body_link_z_dim}"/>
+      </geometry>
+    </collision>
+
+    <collision>
+      <origin rpy="0 0 0" xyz="${(body_link_x_dim/2 - body_inner_x)/4 + 0.9} 0 0"/>  
+      <geometry>
+        <box size="0.1 ${body_inner_y} ${body_link_z_dim}"/>
+      </geometry>
+    </collision>
+
+    <collision>
+      <origin rpy="0 0 0" xyz="${body_link_x_dim / 4} ${(body_link_y_dim - 0.1)/ 2} 0"/>  
+      <geometry>
+        <box size="${body_inner_x + 0.2} 0.1 ${body_link_z_dim}"/>
+      </geometry>
+    </collision>
+
+    <collision>
+      <origin rpy="0 0 0" xyz="${body_link_x_dim / 4} ${-1 * (body_link_y_dim - 0.1)/ 2} 0"/> 
+      <geometry>
+        <box size="${body_inner_x + 0.2} 0.1 ${body_link_z_dim}"/>
+      </geometry>
+    </collision>
+
+    <collision>
+      <origin rpy="0 0 0" xyz="${body_link_x_dim / 4} 0 ${-1 * (body_link_z_dim - 0.1)/2}"/> 
+      <geometry>
+        <box size="${body_inner_x} ${body_inner_y} 0.1"/>
       </geometry>
     </collision>
     
@@ -85,6 +163,10 @@
       />
     </inertial>
   </link>
+  
+  <!--####################################-->
+  <!--#         end of body_link         #-->
+  <!--####################################-->
   
  <!--# Joint from iRWB to wheel 1 #-->
  <joint name="wheel1_joint" type="continuous">
@@ -213,5 +295,13 @@
     
     <xacro:inertia_wheel/>
   </link>
+
+
+  <!-- Fixed Joint from arm to body -->
+  <joint name="arm_mount_joint" type="fixed">
+    <parent link="body_link"/>
+    <child link="base_link"/>
+    <origin rpy="0 0 0" xyz="0 0 0.4"/>
+  </joint>
  
 </robot>

@@ -1,5 +1,256 @@
 <?xml version="1.0"?>
-<!-- http://wiki.ros.org/urdf/XML/link -->
-<robot name="arm6_joint">
+<robot name="arm_robot">
   
+  <!-- Base of the arm(sliding rack)-->
+  <link name="base_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="0.2 1 0.1"/>
+      </geometry>
+
+      <material name="blue">
+        <color rgba="0 0 1 1"/>
+      </material>
+    </visual>
+
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="0.2 1 0.1"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- Joint from Base to First link -->
+  <joint name="arm1_p_joint" type="prismatic">
+    <parent link="base_link"/>
+    <child link="arm1_p_link"/>
+    <origin rpy="0 0 0" xyz="0 0 0.1"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="0.4" upper="-0.4" effort="100" velocity="0.1"/>
+  </joint>
+
+  <!-- First Prismatic Link -->
+  <link name="arm1_p_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.1" radius="0.1"/>
+      </geometry>
+      
+      <material name="red">
+        <color rgba="1 0 0 1"/>
+      </material>
+    </visual>
+    
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.1" radius="0.1"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- Joint from First prismatic to revolute link -->
+  <joint name="arm1_r_joint" type="revolute">
+    <parent link="arm1_p_link"/>
+    <child link="arm1_r_link"/>
+    <origin rpy="0 0 0" xyz="0 0 0.1"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="6.28318530718" upper="-6.28318530718" effort="100" velocity="0.1"/>
+  </joint>
+
+  <!-- First Revolute Link -->
+  <link name="arm1_r_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.1" radius="0.1"/>
+      </geometry>
+      
+      <material name="red">
+        <color rgba="1 0 0 1"/>
+      </material>
+    </visual>
+
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.1" radius="0.1"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- Joint from First revolute to arm2_link -->
+  <joint name="arm2_joint" type="revolute">
+    <parent link="arm1_r_link"/>
+    <child link="arm2_link"/>
+    <origin rpy="0 0 0" xyz="0 -0.2 -0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="6.28318530718" upper="-6.28318530718" effort="100" velocity="0.1"/>
+  </joint>
+  
+  <!-- Second Link -->
+  <link name="arm2_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="0.2 0.2 0.1"/>
+      </geometry>
+
+      <material name="red">
+        <color rgba="1 0 0 1"/>
+      </material>
+    </visual>
+
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0.3"/>
+      <geometry>
+        <cylinder length="0.5" radius="0.1"/>
+      </geometry>
+
+      <material name="yellow">
+        <color rgba="1 1 0 1"/>
+      </material>
+    </visual>
+
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0.6"/>
+      <geometry>
+        <box size="0.2 0.2 0.1"/>
+      </geometry>
+
+      <material name="red">
+        <color rgba="1 0 0 1"/>
+      </material>
+    </visual>
+
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="0.2 0.2 0.1"/>
+      </geometry>
+    </collision>
+
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0.3"/>
+      <geometry>
+        <cylinder length="0.5" radius="0.1"/>
+      </geometry>
+    </collision>
+
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0.6"/>
+      <geometry>
+        <box size="0.2 0.2 0.1"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- Joint from arm2_link to arm3_link -->
+  <joint name="arm3_joint" type="revolute">
+    <parent link="arm2_link"/>
+    <child link="arm3_link"/>
+    <origin rpy="0 0 0" xyz="0 0.2 0.6"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="6.28318530718" upper="-6.28318530718" effort="100" velocity="0.1"/>
+  </joint>
+  
+  <!-- Third Link -->
+  <link name="arm3_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="0.2 0.2 0.1"/>
+      </geometry>
+
+      <material name="red">
+        <color rgba="1 0 0 1"/>
+      </material>
+    </visual>
+
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0.3"/>
+      <geometry>
+        <cylinder length="0.5" radius="0.1"/>
+      </geometry>
+
+      <material name="yellow">
+        <color rgba="1 1 0 1"/>
+      </material>
+    </visual>
+
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="0.2 0.2 0.1"/>
+      </geometry>
+    </collision>
+
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0.3"/>
+      <geometry>
+        <cylinder length="0.5" radius="0.1"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- Joint from arm3_link to arm4_link -->
+  <joint name="arm4_joint" type="prismatic">
+    <parent link="arm3_link"/>
+    <child link="arm4_link"/>
+    <origin rpy="0 0 0" xyz="0 0 0.3"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="0" upper="0.5" effort="100" velocity="0.1"/>
+  </joint>
+
+  <!-- Fourth Link -->
+  <link name="arm4_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.5" radius="0.08"/>
+      </geometry>
+
+      <material name="green">
+        <color rgba="0 1 0 1"/>
+      </material>
+    </visual>
+
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0.3"/>
+      <geometry>
+        <cylinder length="0.1" radius="0.1" />
+      </geometry>
+
+      <material name="red">
+        <color rgba="1 0 0 1"/>
+      </material>
+    </visual>
+
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.5" radius="0.08"/>
+      </geometry>
+    </collision>
+
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0.3"/>
+      <geometry>
+        <cylinder length="0.1" radius="0.1" />
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- Joint from arm4_link to tool_link -->
+  <joint name="tool_joint" type="fixed">
+    <parent link="arm4_link"/>
+    <child link="tool_link"/>
+    <origin rpy="0 0 0" xyz="0 0 0.3"/>
+  </joint>
+
+  <link name="tool_link"/>
+
 </robot>

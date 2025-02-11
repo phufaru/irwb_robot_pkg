@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<sdf version="1.6">
+  <world name="airport_runway">
+
+    <!-- Sun for lighting -->
+    <include>
+      <uri>model://sun</uri>
+    </include>
+
+    <!-- Ground Plane -->
+    <include>
+      <uri>model://ground_plane</uri>
+    </include>
+
+    <!-- Runway (Black with White Stripes) -->
+    <model name="runway">
+      <static>true</static>
+      <link name="runway_link">
+        <collision name="runway_collision">
+          <geometry>
+            <box>
+              <size>100 10 0.1</size>  <!-- Length 100m, Width 10m, Thickness 0.1m -->
+            </box>
+          </geometry>
+        </collision>
+        <visual name="runway_visual">
+          <geometry>
+            <box>
+              <size>100 10 0.1</size>  <!-- Same size as collision -->
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/Black</name>
+            </script>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- White Stripes (Placed Manually) -->
+    <model name="white_stripe">
+      <static>true</static>
+      <pose>0 0 0.06 0 0 0</pose>
+      <link name="stripe_link">
+        <visual name="stripe_visual">
+          <geometry>
+            <box>
+              <size>100 0.15 0.02</size>  <!-- Length 60cm, Width 15cm, Thickness 2cm -->
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/White</name>
+            </script>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+  </world>
+</sdf>
