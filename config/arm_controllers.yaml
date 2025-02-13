@@ -1,24 +1,29 @@
 arm1_p_joint_controller:
   type: effort_controllers/JointPositionController
   joint: arm1_p_joint
-  pid: {p: 10.0, i: 0.0, d: 0.0}
+  pid: {p: 500.0, i: 0.1, d: 0.5}
+  command: 0.0  # Hold the prismatic joint at 0
 
 arm1_r_joint_controller:
   type: effort_controllers/JointPositionController
   joint: arm1_r_joint
-  pid: {p: 10.0, i: 0.0, d: 0.0}
+  pid: {p: 500.0, i: 0.1, d: 0.5}
+  command: 0.0  # Hold the revolute joint at 0 radians
 
 arm2_joint_controller:
   type: effort_controllers/JointPositionController
   joint: arm2_joint
-  pid: {p: 10.0, i: 0.0, d: 0.0}
+  pid: {p: 500.0, i: 0.1, d: 0.5}
+  command: 0.0
 
 arm3_joint_controller:
   type: effort_controllers/JointPositionController
   joint: arm3_joint
-  pid: {p: 10.0, i: 0.0, d: 0.0}
+  pid: {p: 500.0, i: 0.1, d: 0.5}
+  command: 0.0
 
 arm4_joint_controller:
   type: effort_controllers/JointPositionController
   joint: arm4_joint
-  pid: {p: 10.0, i: 0.0, d: 0.0}
+  pid: {p: 500.0, i: 0.1, d: 0.5}
+  command: 0.0
