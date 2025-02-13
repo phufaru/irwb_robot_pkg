@@ -1,8 +1,0 @@
-<launch>
-  <arg name="world_file" default="$(find irwb_robot_pkg)/worlds/airport_runway.world"/>
-
-  <!-- Start Gazebo with the airport runway -->
-  <node name="gazebo" pkg="gazebo_ros" type="gzserver" args="-s libgazebo_ros_factory.so $(arg world_file)" output="screen"/>
-
-  <node name="gazebo_gui" pkg="gazebo_ros" type="gzclient" output="screen"/>
-</launch>
