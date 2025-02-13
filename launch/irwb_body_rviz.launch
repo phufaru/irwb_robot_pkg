@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="model"/>
+  <param name="robot_description"
+     command="$(find xacro)/xacro $(find irwb_robot_pkg)/urdf/irwb_body.xacro"/>
+     
+  <node name="joint_state_publisher_gui"
+         pkg="joint_state_publisher_gui"
+        type="joint_state_publisher_gui"/>
+        
+  <node name="robot_state_publisher"
+         pkg="robot_state_publisher"
+        type="robot_state_publisher"/>
+        
+  <node name="rviz"
+         pkg="rviz"
+        type="rviz"
+        args="-d $(find irwb_robot_pkg)/robot.rviz"
+    required="true"/>
+</launch>
+
+<!-- <launch>
+    Load the robot description (URDF from xacro)
+    <param name="robot_description" command="$(find xacro)/xacro $(find irwb_robot_pkg)/urdf/arm.xacro" />
+
+    Start the joint state publisher GUI
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+
+    Start the robot state publisher
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+    Launch RViz with a predefined config (if available)
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find irwb_robot_pkg)/robotarm.rviz" required="true"/>
+
+</launch> -->

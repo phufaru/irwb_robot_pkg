@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<launch>
+  <node name="unpause_gazebo" pkg="rosservice" type="rosservice"
+        args="call /gazebo/unpause_physics" output="screen"/>
+</launch>

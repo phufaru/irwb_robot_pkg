@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Load the URDF model of the robot -->
+  <param name="robot_description" command="$(find xacro)/xacro --inorder $(find irwb_robot_pkg)/urdf/irwb.xacro" />
+
+  <!-- Launch move_base with configuration files -->
+  <node pkg="move_base" type="move_base" name="move_base" output="screen">
+    <param name="base_global_planner" value="navfn/NavfnROS"/>
+    <param name="base_local_planner" value="base_local_planner/TrajectoryPlannerROS"/>
+    <rosparam file="$(find irwb_robot_pkg)/config/costmap_common_params.yaml" command="load" ns="move_base"/>
+    <rosparam file="$(find irwb_robot_pkg)/config/local_costmap_params.yaml" command="load" ns="move_base/local_costmap"/>
+    <rosparam file="$(find irwb_robot_pkg)/config/global_costmap_params.yaml" command="load" ns="move_base/global_costmap"/>
+  </node>
+  
+  <!-- Launch the navigation goal publisher -->
+  <node pkg="irwb_robot_pkg" type="navigate_to_garbage.py" name="navigate_to_garbage" output="screen"/>
+
+  <!-- Set position of the model of the robot-->
+  <arg name="x" default="0"/>
+  <arg name="y" default="0"/>
+  <arg name="z" default="0.5"/>
+
+  <!-- Launch Gazebo with the airport runway world in paused mode -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find irwb_robot_pkg)/worlds/airport_runway.world" />
+    <arg name="use_sim_time" value="true" />
+    <arg name="debug" value="false" />
+    <arg name="gui" value="true" />
+    <arg name="paused" value="true" />
+  </include>
+
+  <!-- Spawn the robot using gazebo_ros -->
+  <node name="spawn_the_robot" pkg="gazebo_ros" type="spawn_model" args="-urdf -model irwb_full -param robot_description -x $(arg x) -y $(arg y) -z $(arg z)" />
+
+  <!-- Load the node controllers manager -->
+  <node name="controller_manager" 
+        pkg="controller_manager" 
+        type="controller_manager" 
+        output="screen" 
+        respawn="false" 
+        ns="/irwb_full"
+        args="joint_state_controller arm_controller gripper_controller --timeout 60 ">
+  </node>
+
+  <!-- Load the controllers -->
+  <rosparam command="load" file="$(find irwb_robot_pkg)/config/irwb_joint_state.yaml" />
+  <rosparam command="load" file="$(find irwb_robot_pkg)/config/trajectory_controller.yaml" />
+
+  <!-- Convert joint states to TF transform for rviz and rqt -->
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" output="screen" respawn="false">
+    <remap from='/joint_states' to='/irwb_full/joint_states'/>
+  </node>
+
+  <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui"/>
+  <remap from='/joint_states' to='/irwb_full/joint_states'/>
+
+  <include file="$(find arm_moveit_config)/launch/planning_context.launch">
+    <arg name="load_robot_description" value="false" />
+  </include>
+
+  <include file="$(find arm_moveit_config)/launch/move_group.launch">
+    <arg name="publish_monitored_planning_scene" value="true" />
+  </include>
+
+  <include file="$(find arm_moveit_config)/launch/moveit_rviz.launch">
+    <arg name="rviz_config" value="$(find arm_moveit_config)/launch/moveit.rviz" />
+  </include>
+
+</launch>
